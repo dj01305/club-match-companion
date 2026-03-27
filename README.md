@@ -138,7 +138,7 @@ All tests use `async/await` and explicit waits. No `Thread.sleep`.
 
 ## Career context
 
-I have been writing test automation since 2014. My earlier work — like the [Hudl Login Test Suite (2022)](https://github.com/dj01305/Devin-James-Hudl-Repo) — was focused on Java + Selenium WebDriver automation. That repo reflects where I started, and I've written openly about what I'd do differently today.
+I have been writing test automation since 2014. My earlier work — like the [Hudl Login Test Suite](https://github.com/dj01305/Devin-James-Hudl-Repo) — was focused on Java + Selenium WebDriver automation. That repo reflects where I started, and I've written openly about what I'd do differently today.
 
 Club Match Companion represents where I am now: building full-stack applications with quality baked in from the start. The shift isn't just in language or framework — it's in how I think about software. Tests are portable, CI-ready, and written with the same async patterns as the application code itself.
 
