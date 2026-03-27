@@ -5,8 +5,10 @@
 Phases 1–3 (project scaffold, authentication, and match notes CRUD) are fully implemented.
 This task list covers the remaining work:
 
-- **Phase 4** — Automated tests: backend API tests (Supertest + Jest) and frontend browser tests (Playwright)
-- **Phase 5** — CI/CD pipeline (GitHub Actions) and project README
+- **Phase 4** — Frontend unit tests (Vitest + React Testing Library)
+- **Phase 5** — Backend API tests (Supertest + Jest)
+- **Phase 6** — Frontend E2E tests (Playwright)
+- **Phase 7** — CI/CD pipeline (GitHub Actions) and project README
 
 Tasks marked with `*` are optional property-based tests. They validate correctness rules from the design document and can be skipped for a faster run, but are strongly recommended.
 
@@ -52,8 +54,51 @@ Tasks marked with `*` are optional property-based tests. They validate correctne
     - Dashboard shows name + club, note list, add/edit/delete actions wired to the API
     - _Requirements: 4.1, 5.1, 6.1, 7.1, 8.1_
 
-- [ ] 4. Phase 4 — Backend API tests (Supertest + Jest)
-  - [ ] 4.1 Set up the backend test environment
+- [ ] 4. Phase 4 — Frontend unit tests (Vitest + React Testing Library)
+  - [ ] 4.1 Set up Vitest and React Testing Library in the frontend
+    - Install dependencies: `cd frontend && npm install --save-dev vitest @vitest/ui jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event`
+    - Vitest is the test runner — it works natively with Vite so no extra config is needed
+    - React Testing Library lets you render components and interact with them like a real user would (clicking buttons, typing in fields, reading text on screen)
+    - jsdom is a fake browser environment so tests can run without opening a real browser
+    - Add a `test` script to `frontend/package.json`: `"test": "vitest --run"`
+    - Update `frontend/vite.config.ts` to add `test: { environment: 'jsdom', globals: true, setupFiles: './src/test/setup.ts' }`
+    - Create `frontend/src/test/setup.ts` and import `@testing-library/jest-dom` inside it (this adds helpful matchers like `toBeInTheDocument()`)
+
+  - [ ] 4.2 Write unit tests — NoteCard component
+    - Create `frontend/src/components/__tests__/NoteCard.test.tsx`
+    - NoteCard is the component that displays a single match note on the dashboard
+    - Test: renders the note title, club, opponent, and date on screen
+    - Test: clicking the Edit button calls the `onEdit` callback
+    - Test: clicking the Delete button calls the `onDelete` callback
+
+  - [ ] 4.3 Write unit tests — NoteForm component
+    - Create `frontend/src/components/__tests__/NoteForm.test.tsx`
+    - NoteForm is the form used to create or edit a match note
+    - Test: all input fields are present and empty when the form first loads
+    - Test: typing into each field updates its value
+    - Test: submitting the form calls the `onSubmit` callback with the correct field values
+    - Test: submitting with empty required fields does not call `onSubmit`
+
+  - [ ] 4.4 Write unit tests — ProtectedRoute component
+    - Create `frontend/src/components/__tests__/ProtectedRoute.test.tsx`
+    - ProtectedRoute is the component that blocks unauthenticated users from accessing the dashboard
+    - Test: when a token exists in localStorage, the protected content is rendered
+    - Test: when no token exists, the user is redirected to `/login`
+
+  - [ ] 4.5 Write unit tests — useNotes hook
+    - Create `frontend/src/hooks/__tests__/useNotes.test.ts`
+    - useNotes is a custom hook that handles fetching, creating, updating, and deleting notes by talking to the API
+    - Use `vi.mock` to mock axios so tests don't make real network calls — this keeps tests fast and isolated
+    - Test: on load, fetches notes from the API and returns them
+    - Test: `createNote` calls the correct API endpoint and adds the new note to the list
+    - Test: `deleteNote` calls the correct API endpoint and removes the note from the list
+
+  - [ ] 4.6 Checkpoint — run all frontend unit tests
+    - Run `cd frontend && npm test` and confirm all tests pass
+    - Fix any failures before moving on
+
+- [ ] 5. Phase 5 — Backend API tests (Supertest + Jest)
+  - [ ] 5.1 Set up the backend test environment
     - Create `backend/src/__tests__/` folder
     - Add a Jest config to `backend/package.json` (if not already present) that sets `NODE_ENV=test` so tests use an isolated in-memory database
     - Confirm `jest` and `supertest` are already listed in `devDependencies` (they are — no install needed)
