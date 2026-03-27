@@ -1,5 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import ClubAutocomplete from '../components/ClubAutocomplete';
 
 const FIELD_LABELS: Record<string, string> = {
   name: 'Full name',
@@ -56,7 +57,7 @@ export default function Register() {
         {error && <div className="alert alert-error" role="alert">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          {(['name', 'email', 'password', 'favoriteClub'] as const).map(field => (
+          {(['name', 'email', 'password'] as const).map(field => (
             <div className="form-group" key={field}>
               <label htmlFor={field}>{FIELD_LABELS[field]}</label>
               <input
@@ -70,6 +71,17 @@ export default function Register() {
               />
             </div>
           ))}
+          <div className="form-group">
+            <label htmlFor="favoriteClub">{FIELD_LABELS.favoriteClub}</label>
+            <ClubAutocomplete
+              id="favoriteClub"
+              name="favoriteClub"
+              value={form.favoriteClub}
+              placeholder={FIELD_PLACEHOLDERS.favoriteClub}
+              required
+              onChange={val => setForm(prev => ({ ...prev, favoriteClub: val }))}
+            />
+          </div>
           <button type="submit" className="btn btn-primary">Create account</button>
         </form>
 
