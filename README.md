@@ -1,8 +1,6 @@
 # Club Match Companion
 
-A full-stack web app for football fans to log and manage personal match notes. Built as a portfolio project to demonstrate growth from pure QA automation engineer into an SDET.
-
----
+A full-stack web app for football fans to log and manage personal match notes. Built as a portfolio project to demonstrate growth from QA automation engineer into an SDET — and as a benchmark for AI-assisted development, using Kiro AI to accelerate boilerplate generation while applying senior-level oversight to architectural patterns and test robustness.
 
 ## What it does
 
@@ -11,28 +9,31 @@ A full-stack web app for football fans to log and manage personal match notes. B
 - Dashboard themed around your favourite club
 - Protected routes — only logged-in users can access their notes
 
----
+## Key Quality Features
+
+- ✅ JWT-secured API with automated auth flow testing
+- ✅ Zero-flakiness Playwright config (auto-waiting, no hard sleeps)
+- ✅ Type safety across the stack with TypeScript
+- ✅ CI/CD ready with headless test execution
 
 ## Tech stack
 
-**Frontend**
+### Frontend
 - React 18 + TypeScript
 - Vite (build tool)
 - React Router (page navigation)
 - Axios (HTTP requests)
 
-**Backend**
+### Backend
 - Node.js + Express
-- SQLite (via sql.js) — file-based database, no setup required
+- SQLite (via sql.js) — file-based, zero-config database. No Postgres or MySQL setup required. Clone and run.
 - bcrypt — password hashing
 - JSON Web Tokens (JWT) — session authentication
 
-**Testing**
+### Testing
 - Playwright — end-to-end UI tests
 - Supertest — API integration tests
 - Jest — test runner
-
----
 
 ## Project structure
 
@@ -53,59 +54,46 @@ club-match-companion/
         └── db/          # Database setup
 ```
 
----
-
 ## Getting started
 
 ### Prerequisites
-
 - Node.js v18+
 - npm
 
 ### 1. Clone the repo
-
 ```bash
 git clone <your-repo-url>
 cd club-match-companion
 ```
 
 ### 2. Set up the backend
-
 ```bash
 cd backend
-cp .env.example .env
-# Open .env and set a strong JWT_SECRET value
+cp .env.example .env  # Open .env and set a strong JWT_SECRET value
 npm install
 npm run dev
 ```
-
-The API will start on `http://localhost:3001`
+The API will start on http://localhost:3001
 
 ### 3. Set up the frontend
-
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-
-The app will open on `http://localhost:5173`
-
----
+The app will open on http://localhost:5173
 
 ## API endpoints
 
-| Method | Endpoint       | Auth required | Description         |
-|--------|----------------|---------------|---------------------|
-| POST   | /auth/register | No            | Create an account   |
-| POST   | /auth/login    | No            | Log in, receive JWT |
-| GET    | /api/notes     | Yes           | Get all your notes  |
-| POST   | /api/notes     | Yes           | Create a note       |
-| PUT    | /api/notes/:id | Yes           | Update a note       |
-| DELETE | /api/notes/:id | Yes           | Delete a note       |
-| GET    | /health        | No            | API health check    |
-
----
+| Method | Endpoint | Auth required | Description |
+|--------|----------|---------------|-------------|
+| POST | /auth/register | No | Create an account |
+| POST | /auth/login | No | Log in, receive JWT |
+| GET | /api/notes | Yes | Get all your notes |
+| POST | /api/notes | Yes | Create a note |
+| PUT | /api/notes/:id | Yes | Update a note |
+| DELETE | /api/notes/:id | Yes | Delete a note |
+| GET | /health | No | API health check |
 
 ## Environment variables
 
@@ -116,33 +104,27 @@ PORT=3001
 JWT_SECRET=your_super_secret_key_change_this_in_production
 ```
 
----
-
 ## Running the tests
 
-**API tests (Supertest)**
+### API tests (Supertest)
 ```bash
 cd backend
 npm test
 ```
 
-**E2E tests (Playwright)**
+### E2E tests (Playwright)
 ```bash
 cd frontend
 npx playwright test
 ```
 
-All tests use `async/await` and explicit waits. No `Thread.sleep`.
-
----
+All tests use async/await and explicit waits. No Thread.sleep.
 
 ## Career context
 
-I have been writing test automation since 2014. My earlier work — like the [Hudl Login Test Suite](https://github.com/dj01305/Devin-James-Hudl-Repo) — was focused on Java + Selenium WebDriver automation. That repo reflects where I started, and I've written openly about what I'd do differently today.
+I have been writing test automation since 2014. My earlier work — like the Hudl Login Test Suite — was focused on Java + Selenium WebDriver automation. That repo reflects where I started, and I've written openly about what I'd do differently today.
 
 Club Match Companion represents where I am now: building full-stack applications with quality baked in from the start. The shift isn't just in language or framework — it's in how I think about software. Tests are portable, CI-ready, and written with the same async patterns as the application code itself.
-
----
 
 ## Author
 
