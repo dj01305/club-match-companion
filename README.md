@@ -1,6 +1,6 @@
 # Club Match Companion
 
-A full-stack web app for football fans to log and manage personal match notes. Built as a portfolio project to demonstrate growth from pure QA automation into full-stack development with a hybrid QE mindset.
+A full-stack web app for football fans to log and manage personal match notes. Built as a portfolio project to demonstrate growth from pure QA automation into an SDET.
 
 ---
 
