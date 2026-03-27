@@ -14,7 +14,7 @@ export interface Note {
 
 export type NotePayload = Omit<Note, 'id'>;
 
-const API = 'http://localhost:3000/api/notes';
+const API = `${import.meta.env.VITE_API_URL}/api/notes`;
 
 export function useNotes() {
   const { token } = useAuth();
