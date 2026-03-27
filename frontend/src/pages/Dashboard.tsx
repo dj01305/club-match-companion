@@ -1,14 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNotes, Note, NotePayload } from '../hooks/useNotes';
 import NoteCard from '../components/NoteCard';
 import NoteForm from '../components/NoteForm';
+import { getClubTheme } from '../utils/clubThemes';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const { notes, loading, error, createNote, updateNote, deleteNote } = useNotes();
   const [showForm, setShowForm] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | undefined>(undefined);
+
+  // Apply team accent color as CSS variables only — no background tinting
+  useEffect(() => {
+    const theme = getClubTheme(user?.favoriteClub ?? '');
+    document.documentElement.style.setProperty('--accent', theme.primary);
+    document.documentElement.style.setProperty('--accent-dark', theme.secondary);
+    return () => {
+      document.documentElement.style.removeProperty('--accent');
+      document.documentElement.style.removeProperty('--accent-dark');
+    };
+  }, [user?.favoriteClub]);
 
   function handleEdit(note: Note) {
     setEditingNote(note);
@@ -26,6 +38,8 @@ export default function Dashboard() {
     } else {
       await createNote(payload);
     }
+    setShowForm(false);
+    setEditingNote(undefined);
   }
 
   async function handleDelete(id: number) {
@@ -34,32 +48,75 @@ export default function Dashboard() {
     }
   }
 
+  const theme = getClubTheme(user?.favoriteClub ?? '');
+
   return (
-    <div style={{ maxWidth: 720, margin: '0 auto', padding: 24 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h1>Welcome, {user?.name}</h1>
-          <p>Favorite club: <strong>{user?.favoriteClub}</strong></p>
+    <div className="dashboard">
+      {/* Navbar */}
+      <nav className="navbar">
+        <div className="navbar-inner">
+          <div className="navbar-brand">
+            <span className="brand-icon">⚽</span>
+            Club Match Companion
+          </div>
+          <div className="navbar-right">
+            <span
+              className="club-pill"
+              style={{ color: theme.primary, borderColor: `${theme.primary}33` }}
+            >
+              {user?.favoriteClub}
+            </span>
+            <button className="btn btn-ghost btn-sm" onClick={logout}>
+              Sign out
+            </button>
+          </div>
         </div>
-        <button onClick={logout}>Logout</button>
-      </div>
+      </nav>
 
-      <hr />
+      {/* Main content */}
+      <main className="dashboard-main">
+        <div className="page-header">
+          <div className="page-header-row">
+            <div>
+              <h1>Welcome back, {user?.name} ⚽</h1>
+              <p>Track your club matches and notes</p>
+            </div>
+            {!showForm && (
+              <button
+                className="btn btn-primary"
+                style={{ width: 'auto', padding: '11px 28px' }}
+                onClick={() => setShowForm(true)}
+              >
+                + Add Match Note
+              </button>
+            )}
+          </div>
+        </div>
 
-      {showForm ? (
-        <NoteForm initial={editingNote} onSubmit={handleSubmit} onCancel={handleCancel} />
-      ) : (
-        <button onClick={() => setShowForm(true)}>+ Add Note</button>
-      )}
+        {/* Note form */}
+        {showForm && (
+          <NoteForm initial={editingNote} onSubmit={handleSubmit} onCancel={handleCancel} />
+        )}
 
-      <h2>Match Notes</h2>
+        {/* Notes list */}
+        {loading && <div className="loading">Loading notes…</div>}
+        {error && <div className="alert alert-error">{error}</div>}
 
-      {loading && <p>Loading notes...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {!loading && notes.length === 0 && <p>No notes yet. Add your first one above.</p>}
-      {notes.map(note => (
-        <NoteCard key={note.id} note={note} onEdit={handleEdit} onDelete={handleDelete} />
-      ))}
+        {!loading && !showForm && (
+          <div className="notes-list">
+            {notes.length === 0 ? (
+              <div className="empty-state">
+                <span className="empty-icon">📋</span>
+                <p>No notes yet. Add your first match note above.</p>
+              </div>
+            ) : (
+              notes.map(note => (
+                <NoteCard key={note.id} note={note} onEdit={handleEdit} onDelete={handleDelete} />
+              ))
+            )}
+          </div>
+        )}
+      </main>
     </div>
   );
 }

@@ -8,15 +8,37 @@ interface Props {
 
 export default function NoteCard({ note, onEdit, onDelete }: Props) {
   return (
-    <div style={{ border: '1px solid #ccc', borderRadius: 8, padding: 16, marginBottom: 12 }}>
-      <h3>{note.noteTitle}</h3>
-      <p><strong>Match:</strong> {note.club} vs {note.opponent}</p>
-      <p><strong>Date:</strong> {note.matchDate}</p>
-      {note.competition && <p><strong>Competition:</strong> {note.competition}</p>}
-      {note.noteBody && <p>{note.noteBody}</p>}
-      <p><strong>Watched:</strong> {note.watched ? 'Yes' : 'No'}</p>
-      <button onClick={() => onEdit(note)}>Edit</button>
-      <button onClick={() => onDelete(note.id)} style={{ marginLeft: 8 }}>Delete</button>
+    <div className="note-card">
+      <div className="note-card-header">
+        <span className="note-card-title">{note.noteTitle}</span>
+        <div className="note-card-actions">
+          <button className="btn btn-icon" onClick={() => onEdit(note)} title="Edit">✏️</button>
+          <button className="btn btn-icon" onClick={() => onDelete(note.id)} title="Delete">🗑️</button>
+        </div>
+      </div>
+
+      <div className="note-card-subtitle">
+        <span>{note.club} vs {note.opponent}</span>
+        {note.competition && <><span className="dot">·</span><span>{note.competition}</span></>}
+        <span className="dot">·</span>
+        <span>{note.matchDate}</span>
+      </div>
+
+      <div className="watched-row">
+        <span className="watched-label">Watched:</span>
+        <span className={`watched-box${note.watched ? ' checked' : ''}`}>
+          {note.watched ? '✓' : ''}
+        </span>
+        <span className="watched-box-label">Yes</span>
+        <span className={`watched-box${!note.watched ? ' checked' : ''}`}>
+          {!note.watched ? '✓' : ''}
+        </span>
+        <span className="watched-box-label">No</span>
+      </div>
+
+      {note.noteBody && (
+        <div className="note-card-body">{note.noteBody}</div>
+      )}
     </div>
   );
 }

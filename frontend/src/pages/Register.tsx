@@ -1,14 +1,23 @@
 import { useState, FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
+const FIELD_LABELS: Record<string, string> = {
+  name: 'Full name',
+  email: 'Email',
+  password: 'Password',
+  favoriteClub: 'Favourite club',
+};
+
+const FIELD_PLACEHOLDERS: Record<string, string> = {
+  name: 'John Smith',
+  email: 'you@example.com',
+  password: '••••••••',
+  favoriteClub: 'e.g. Arsenal, Man City, Barcelona…',
+};
+
 export default function Register() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    password: '',
-    favoriteClub: '',
-  });
+  const [form, setForm] = useState({ name: '', email: '', password: '', favoriteClub: '' });
   const [error, setError] = useState('');
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -36,26 +45,38 @@ export default function Register() {
   }
 
   return (
-    <div>
-      <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        {(['name', 'email', 'password', 'favoriteClub'] as const).map(field => (
-          <div key={field}>
-            <label htmlFor={field}>{field}</label>
-            <input
-              id={field}
-              name={field}
-              type={field === 'password' ? 'password' : 'text'}
-              value={form[field]}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        ))}
-        {error && <p role="alert">{error}</p>}
-        <button type="submit">Register</button>
-      </form>
-      <p>Already have an account? <Link to="/login">Login</Link></p>
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-logo">
+          <span className="logo-icon">⚽</span>
+          <h1>Club Match Companion</h1>
+          <p>Create your account</p>
+        </div>
+
+        {error && <div className="alert alert-error" role="alert">{error}</div>}
+
+        <form onSubmit={handleSubmit}>
+          {(['name', 'email', 'password', 'favoriteClub'] as const).map(field => (
+            <div className="form-group" key={field}>
+              <label htmlFor={field}>{FIELD_LABELS[field]}</label>
+              <input
+                id={field}
+                name={field}
+                type={field === 'password' ? 'password' : 'text'}
+                value={form[field]}
+                onChange={handleChange}
+                placeholder={FIELD_PLACEHOLDERS[field]}
+                required
+              />
+            </div>
+          ))}
+          <button type="submit" className="btn btn-primary">Create account</button>
+        </form>
+
+        <p className="auth-footer">
+          Already have an account? <Link to="/login">Sign in</Link>
+        </p>
+      </div>
     </div>
   );
 }
