@@ -1,0 +1,20 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      # Persists the SQLite database file on your machine so data survives container restarts
+      - ./backend/data:/app/data
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      # Points the Vite proxy at the backend service by its Docker service name
+      - VITE_BACKEND_URL=http://backend:3000
+    depends_on:
+      - backend

@@ -59,8 +59,8 @@ club-match-companion/
 ## Getting started
 
 ### Prerequisites
-- Node.js v18+
-- npm
+- Node.js v18+ and npm (for local dev)
+- or [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for Docker setup)
 
 ### 1. Clone the repo
 ```bash
@@ -68,7 +68,25 @@ git clone https://github.com/dj01305/club-match-companion.git
 cd club-match-companion
 ```
 
-### 2. Set up the backend
+### Option A — Docker (recommended, single command)
+
+Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) to be installed and running.
+
+```bash
+cp backend/.env.example backend/.env  # Set a strong JWT_SECRET value
+docker compose up --build
+```
+
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3000
+
+To stop: `Ctrl+C`. To start again later: `docker compose up`
+
+---
+
+### Option B — Local dev (two terminals)
+
+#### 2. Set up the backend
 ```bash
 cd backend
 cp .env.example .env  # Open .env and set a strong JWT_SECRET value
@@ -77,7 +95,7 @@ npm run dev
 ```
 The API will start on http://localhost:3000
 
-### 3. Set up the frontend
+#### 3. Set up the frontend
 ```bash
 cd frontend
 npm install
