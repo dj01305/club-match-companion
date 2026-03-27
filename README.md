@@ -12,7 +12,7 @@ A full-stack web app for football fans to log and manage personal match notes. B
 ## Key Quality Features
 
 - ✅ JWT-secured API with automated auth flow testing
-- ✅ Zero-flakiness Playwright config (auto-waiting, no hard sleeps)
+- ✅ Zero-flakiness Playwright config
 - ✅ Type safety across the stack with TypeScript
 - ✅ CI/CD ready with headless test execution
 
@@ -119,7 +119,7 @@ cd frontend
 npx playwright test
 ```
 
-All tests use async/await and explicit waits. No Thread.sleep.
+All tests use async/await and explicit waits
 
 ## Career context
 
