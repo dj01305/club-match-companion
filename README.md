@@ -32,8 +32,10 @@ A full-stack web app for football fans to log and manage personal match notes. B
 
 ### Testing
 - Playwright — end-to-end UI tests
-- Supertest — API integration tests
-- Jest — test runner
+- Jest — backend unit test runner
+- Supertest — HTTP request helper for backend tests
+- Vitest — frontend unit test runner
+- React Testing Library — renders components for unit testing
 
 ## Project structure
 
@@ -107,10 +109,22 @@ JWT_SECRET=your_super_secret_key_change_this_in_production
 
 ## Running the tests
 
-### API tests (Supertest)
+### Backend unit tests (Jest)
 ```bash
 cd backend
 npm test
+```
+
+### Frontend unit tests (Vitest)
+```bash
+cd frontend
+npm test
+```
+
+### Automated API tests
+```bash
+cd backend
+# coming soon
 ```
 
 ### E2E tests (Playwright)

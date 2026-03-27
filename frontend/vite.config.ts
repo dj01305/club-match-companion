@@ -10,4 +10,9 @@ export default defineConfig({
       '/auth': 'http://localhost:3000',
     },
   },
+  test: {
+    environment: 'jsdom',           // fake browser environment
+    globals: true,                  // no need to import describe/test/expect
+    setupFiles: './src/test.setup.ts',
+  },
 });
