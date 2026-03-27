@@ -1,13 +1,13 @@
 # Club Match Companion
 
-A full-stack web app for football fans to log and manage personal match notes. Built as a portfolio project to demonstrate growth from pure QA automation into an SDET.
+A full-stack web app for football fans to log and manage personal match notes. Built as a portfolio project to demonstrate growth from pure QA automation engineer into an SDET.
 
 ---
 
 ## What it does
 
 - Register and log in securely with JWT-based authentication
-- Create, edit, and delete personal match notes (club, opponent, date, competition, notes)
+- Create, edit, and delete personal match notes (club, opponent, date, competition)
 - Dashboard themed around your favourite club
 - Protected routes — only logged-in users can access their notes
 
@@ -28,7 +28,7 @@ A full-stack web app for football fans to log and manage personal match notes. B
 - JSON Web Tokens (JWT) — session authentication
 
 **Testing**
-- Playwright — end-to-end UI tests (async/await, no Thread.sleep)
+- Playwright — end-to-end UI tests
 - Supertest — API integration tests
 - Jest — test runner
 
