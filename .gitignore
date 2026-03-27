@@ -4,3 +4,5 @@ backend/data/
 dist/
 .DS_Store
 frontend/.vite/
+frontend/coverage/
+backend/coverage/

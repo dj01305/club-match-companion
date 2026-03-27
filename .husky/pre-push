@@ -1,1 +1,3 @@
 cd frontend && npm run lint
+cd frontend && npm run test:coverage
+cd backend && npm run test:coverage

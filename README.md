@@ -107,6 +107,27 @@ PORT=3000
 JWT_SECRET=your_super_secret_key_change_this_in_production
 ```
 
+## Quality gate
+
+A coverage threshold is enforced automatically on every `git push` via a pre-push hook. The push will be rejected if any of the following drop below **80%**:
+
+- Statement coverage
+- Function coverage
+- Line coverage
+- Branch coverage
+
+This applies to both the frontend and backend independently. All unit tests must also pass. If either check fails, the push is blocked until the issue is resolved.
+
+To run the coverage check manually:
+
+```bash
+# Backend
+cd backend && npm run test:coverage
+
+# Frontend
+cd frontend && npm run test:coverage
+```
+
 ## Running the tests
 
 ### Backend unit tests (Jest)
