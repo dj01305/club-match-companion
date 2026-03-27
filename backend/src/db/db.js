@@ -65,10 +65,9 @@ function saveDb() {
 // Helper: run a query that modifies data (INSERT, UPDATE, DELETE)
 function run(sql, params = []) {
   db.run(sql, params);
+  const lastId = db.exec('SELECT last_insert_rowid()')[0]?.values[0][0] ?? null;
   saveDb();
-  // Return last insert rowid for INSERT operations
-  const result = db.exec('SELECT last_insert_rowid() as id');
-  return { lastInsertRowid: result[0]?.values[0][0] ?? null };
+  return { lastInsertRowid: lastId };
 }
 
 // Helper: get a single row
