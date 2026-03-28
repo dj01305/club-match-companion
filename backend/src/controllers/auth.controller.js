@@ -64,4 +64,17 @@ async function login(req, res) {
   });
 }
 
-module.exports = { register, login };
+async function deleteUser(req, res) {
+  const userId = req.user.id;
+
+  const user = db.get('SELECT id FROM users WHERE id = ?', [userId]);
+  if (!user) {
+    return res.status(404).json({ error: 'User not found.' });
+  }
+
+  db.run('DELETE FROM users WHERE id = ?', [userId]);
+
+  return res.status(200).json({ message: 'Account deleted successfully.' });
+}
+
+module.exports = { register, login, deleteUser };

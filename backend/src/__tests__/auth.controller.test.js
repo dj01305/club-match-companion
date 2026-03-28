@@ -88,3 +88,44 @@ describe('POST /auth/login', () => {
     expect(res.body.error).toMatch(/required/i);
   });
 });
+
+describe('DELETE /auth/user', () => {
+  let token;
+
+  beforeAll(async () => {
+    await request(app).post('/auth/register').send({
+      name: 'Delete Me',
+      email: 'deleteme@example.com',
+      password: 'password123',
+      favoriteClub: 'Fulham',
+    });
+
+    const res = await request(app).post('/auth/login').send({
+      email: 'deleteme@example.com',
+      password: 'password123',
+    });
+    token = res.body.token;
+  });
+
+  test('deletes the authenticated user successfully', async () => {
+    const res = await request(app)
+      .delete('/auth/user')
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.status).toBe(200);
+    expect(res.body.message).toMatch(/deleted successfully/i);
+  });
+
+  test('returns 401 when no token is provided', async () => {
+    const res = await request(app).delete('/auth/user');
+    expect(res.status).toBe(401);
+  });
+
+  test('returns 404 when user no longer exists', async () => {
+    // token is still valid but the user was already deleted above
+    const res = await request(app)
+      .delete('/auth/user')
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.status).toBe(404);
+    expect(res.body.error).toMatch(/not found/i);
+  });
+});
