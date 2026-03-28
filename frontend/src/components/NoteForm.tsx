@@ -13,13 +13,19 @@ const empty: NotePayload = {
   noteTitle: '', noteBody: '', watched: 1,
 };
 
+const emptyErrors = {
+  noteTitle: '', club: '', opponent: '', matchDate: '',
+};
+
 export default function NoteForm({ initial, onSubmit, onCancel }: Props) {
   const [form, setForm] = useState<NotePayload>(initial ? { ...initial } : empty);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState(emptyErrors);
 
   useEffect(() => {
     setForm(initial ? { ...initial } : empty);
+    setFieldErrors(emptyErrors);
   }, [initial]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -28,10 +34,22 @@ export default function NoteForm({ initial, onSubmit, onCancel }: Props) {
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked ? 1 : 0 : value,
     }));
+    if (name in fieldErrors && fieldErrors[name as keyof typeof fieldErrors]) {
+      setFieldErrors(prev => ({ ...prev, [name]: '' }));
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const errors = {
+      noteTitle: form.noteTitle.trim() ? '' : 'Note title is required.',
+      club: form.club.trim() ? '' : 'Your club is required.',
+      opponent: form.opponent.trim() ? '' : 'Opponent is required.',
+      matchDate: form.matchDate.trim() ? '' : 'Match date is required.',
+    };
+    setFieldErrors(errors);
+    if (Object.values(errors).some(Boolean)) return;
+
     setSubmitting(true);
     setError(null);
     try {
@@ -49,55 +67,63 @@ export default function NoteForm({ initial, onSubmit, onCancel }: Props) {
 
       {error && <div className="alert alert-error">{error}</div>}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="form-group">
-          <label htmlFor="noteTitle">Note title *</label>
+          <label htmlFor="noteTitle">Note title <span className="required-indicator" aria-hidden="true">*</span></label>
           <input
             id="noteTitle"
             name="noteTitle"
             placeholder="e.g. Derby day thriller"
             value={form.noteTitle}
             onChange={handleChange}
-            required
+            aria-describedby={fieldErrors.noteTitle ? 'noteTitle-error' : undefined}
           />
+          {fieldErrors.noteTitle && <p className="field-error" id="noteTitle-error" role="alert">{fieldErrors.noteTitle}</p>}
         </div>
 
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="club">Your club *</label>
+            <label htmlFor="club">Your club <span className="required-indicator" aria-hidden="true">*</span></label>
             <ClubAutocomplete
               id="club"
               name="club"
               value={form.club}
               placeholder="e.g. Arsenal"
-              required
-              onChange={val => setForm(prev => ({ ...prev, club: val }))}
+              onChange={val => {
+                setForm(prev => ({ ...prev, club: val }));
+                if (fieldErrors.club) setFieldErrors(prev => ({ ...prev, club: '' }));
+              }}
             />
+            {fieldErrors.club && <p className="field-error" id="club-error" role="alert">{fieldErrors.club}</p>}
           </div>
           <div className="form-group">
-            <label htmlFor="opponent">Opponent *</label>
+            <label htmlFor="opponent">Opponent <span className="required-indicator" aria-hidden="true">*</span></label>
             <ClubAutocomplete
               id="opponent"
               name="opponent"
               value={form.opponent}
               placeholder="e.g. Chelsea"
-              required
-              onChange={val => setForm(prev => ({ ...prev, opponent: val }))}
+              onChange={val => {
+                setForm(prev => ({ ...prev, opponent: val }));
+                if (fieldErrors.opponent) setFieldErrors(prev => ({ ...prev, opponent: '' }));
+              }}
             />
+            {fieldErrors.opponent && <p className="field-error" id="opponent-error" role="alert">{fieldErrors.opponent}</p>}
           </div>
         </div>
 
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="matchDate">Match date *</label>
+            <label htmlFor="matchDate">Match date <span className="required-indicator" aria-hidden="true">*</span></label>
             <input
               id="matchDate"
               name="matchDate"
               type="date"
               value={form.matchDate}
               onChange={handleChange}
-              required
+              aria-describedby={fieldErrors.matchDate ? 'matchDate-error' : undefined}
             />
+            {fieldErrors.matchDate && <p className="field-error" id="matchDate-error" role="alert">{fieldErrors.matchDate}</p>}
           </div>
           <div className="form-group">
             <label htmlFor="competition">Competition</label>
