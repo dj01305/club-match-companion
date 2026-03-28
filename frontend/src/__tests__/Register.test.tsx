@@ -42,10 +42,10 @@ beforeEach(() => {
 describe('Register page', () => {
   test('renders all four fields', () => {
     renderRegister();
-    expect(screen.getByLabelText('Full name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Email')).toBeInTheDocument();
-    expect(screen.getByLabelText('Password')).toBeInTheDocument();
-    expect(screen.getByLabelText('Favourite club')).toBeInTheDocument();
+    expect(screen.getByLabelText('Full name', { exact: false })).toBeInTheDocument();
+    expect(screen.getByLabelText('Email', { exact: false })).toBeInTheDocument();
+    expect(screen.getByLabelText('Password', { exact: false })).toBeInTheDocument();
+    expect(screen.getByLabelText('Favourite club', { exact: false })).toBeInTheDocument();
   });
 
   test('navigates to /login after successful registration', async () => {
@@ -56,10 +56,10 @@ describe('Register page', () => {
 
     renderRegister();
 
-    await userEvent.type(screen.getByLabelText('Full name'), 'Jane Smith');
-    await userEvent.type(screen.getByLabelText('Email'), 'jane@example.com');
-    await userEvent.type(screen.getByLabelText('Password'), 'Password123!');
-    await userEvent.type(screen.getByLabelText('Favourite club'), 'Arsenal');
+    await userEvent.type(screen.getByLabelText('Full name', { exact: false }), 'Jane Smith');
+    await userEvent.type(screen.getByLabelText('Email', { exact: false }), 'jane@example.com');
+    await userEvent.type(screen.getByLabelText('Password', { exact: false }), 'Password123!');
+    await userEvent.type(screen.getByLabelText('Favourite club', { exact: false }), 'Arsenal');
     await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
     await waitFor(() => {
@@ -75,10 +75,10 @@ describe('Register page', () => {
 
     renderRegister();
 
-    await userEvent.type(screen.getByLabelText('Full name'), 'Jane Smith');
-    await userEvent.type(screen.getByLabelText('Email'), 'existing@example.com');
-    await userEvent.type(screen.getByLabelText('Password'), 'Password123!');
-    await userEvent.type(screen.getByLabelText('Favourite club'), 'Arsenal');
+    await userEvent.type(screen.getByLabelText('Full name', { exact: false }), 'Jane Smith');
+    await userEvent.type(screen.getByLabelText('Email', { exact: false }), 'existing@example.com');
+    await userEvent.type(screen.getByLabelText('Password', { exact: false }), 'Password123!');
+    await userEvent.type(screen.getByLabelText('Favourite club', { exact: false }), 'Arsenal');
     await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
     await waitFor(() => {
@@ -91,10 +91,10 @@ describe('Register page', () => {
 
     renderRegister();
 
-    await userEvent.type(screen.getByLabelText('Full name'), 'Jane Smith');
-    await userEvent.type(screen.getByLabelText('Email'), 'jane@example.com');
-    await userEvent.type(screen.getByLabelText('Password'), 'Password123!');
-    await userEvent.type(screen.getByLabelText('Favourite club'), 'Arsenal');
+    await userEvent.type(screen.getByLabelText('Full name', { exact: false }), 'Jane Smith');
+    await userEvent.type(screen.getByLabelText('Email', { exact: false }), 'jane@example.com');
+    await userEvent.type(screen.getByLabelText('Password', { exact: false }), 'Password123!');
+    await userEvent.type(screen.getByLabelText('Favourite club', { exact: false }), 'Arsenal');
     await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
     await waitFor(() => {
@@ -110,10 +110,10 @@ describe('Register page', () => {
 
     renderRegister();
 
-    await userEvent.type(screen.getByLabelText('Full name'), 'Jane Smith');
-    await userEvent.type(screen.getByLabelText('Email'), 'existing@example.com');
-    await userEvent.type(screen.getByLabelText('Password'), 'Password123!');
-    await userEvent.type(screen.getByLabelText('Favourite club'), 'Arsenal');
+    await userEvent.type(screen.getByLabelText('Full name', { exact: false }), 'Jane Smith');
+    await userEvent.type(screen.getByLabelText('Email', { exact: false }), 'existing@example.com');
+    await userEvent.type(screen.getByLabelText('Password', { exact: false }), 'Password123!');
+    await userEvent.type(screen.getByLabelText('Favourite club', { exact: false }), 'Arsenal');
     await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
     await waitFor(() => {

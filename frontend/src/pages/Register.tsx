@@ -59,7 +59,7 @@ export default function Register() {
         <form onSubmit={handleSubmit}>
           {(['name', 'email', 'password'] as const).map(field => (
             <div className="form-group" key={field}>
-              <label htmlFor={field}>{FIELD_LABELS[field]}</label>
+              <label htmlFor={field}>{FIELD_LABELS[field]}<span className="required-indicator" aria-hidden="true">*</span></label>
               <input
                 id={field}
                 name={field}
@@ -72,7 +72,7 @@ export default function Register() {
             </div>
           ))}
           <div className="form-group">
-            <label htmlFor="favoriteClub">{FIELD_LABELS.favoriteClub}</label>
+            <label htmlFor="favoriteClub">{FIELD_LABELS.favoriteClub}<span className="required-indicator" aria-hidden="true">*</span></label>
             <ClubAutocomplete
               id="favoriteClub"
               name="favoriteClub"
