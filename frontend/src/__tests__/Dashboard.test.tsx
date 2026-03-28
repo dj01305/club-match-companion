@@ -5,6 +5,24 @@ import { MemoryRouter } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import Dashboard from '../pages/Dashboard';
 
+// Swap ClubAutocomplete for a plain input so form tests don't have to
+// interact with the dropdown — that behaviour is covered in ClubAutocomplete.test.tsx
+vi.mock('../components/ClubAutocomplete', () => ({
+  default: ({ id, name, value, onChange, placeholder, required }: {
+    id: string; name: string; value: string; onChange: (v: string) => void;
+    placeholder?: string; required?: boolean;
+  }) => (
+    <input
+      id={id}
+      name={name}
+      value={value}
+      placeholder={placeholder}
+      required={required}
+      onChange={e => onChange(e.target.value)}
+    />
+  ),
+}));
+
 // ---------------------------------------------------------------------------
 // Shared test data
 // ---------------------------------------------------------------------------
@@ -76,19 +94,6 @@ describe('Dashboard integration', () => {
     });
   });
 
-  test('renders note cards once notes have loaded', async () => {
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => [mockNote],
-    });
-
-    renderDashboard();
-
-    await waitFor(() => {
-      expect(screen.getByText('North London Derby')).toBeInTheDocument();
-    });
-  });
-
   test('shows the empty state when the user has no notes', async () => {
     mockFetch.mockResolvedValue({
       ok: true,
@@ -146,5 +151,73 @@ describe('Dashboard integration', () => {
 
     expect(screen.queryByText('Delete this note?')).not.toBeInTheDocument();
     expect(screen.getByText('North London Derby')).toBeInTheDocument();
+  });
+
+  test('creates a note and shows it in the list', async () => {
+    const newNote = { ...mockNote, id: 2, noteTitle: 'New Derby' };
+
+    // First call: initial fetch returns empty list
+    // Second call: POST create returns the new note
+    mockFetch
+      .mockResolvedValueOnce({ ok: true, json: async () => [] })
+      .mockResolvedValueOnce({ ok: true, json: async () => newNote });
+
+    renderDashboard();
+
+    await waitFor(() => {
+      expect(screen.getByText('No notes yet. Add your first match note above.')).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: '+ Add Match Note' }));
+
+    await userEvent.type(screen.getByLabelText('Note title *'), 'New Derby');
+    await userEvent.type(screen.getByLabelText(/your club/i), 'Arsenal');
+    await userEvent.type(screen.getByLabelText(/opponent/i), 'Chelsea');
+    await userEvent.type(screen.getByLabelText('Match date *'), '2025-05-01');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Save note' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('New Derby')).toBeInTheDocument();
+    });
+  });
+
+  test('opens the form pre-filled when edit is clicked on a note', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => [mockNote],
+    });
+
+    renderDashboard();
+
+    await waitFor(() => {
+      expect(screen.getByText('North London Derby')).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByTitle('Edit'));
+
+    // Form should be visible in edit mode with the note's title pre-filled
+    expect(screen.getByText('✏️ Edit Note')).toBeInTheDocument();
+    expect(screen.getByLabelText('Note title *')).toHaveValue('North London Derby');
+  });
+
+  test('deletes a note and removes it from the list', async () => {
+    // GET notes, then DELETE succeeds
+    mockFetch
+      .mockResolvedValueOnce({ ok: true, json: async () => [mockNote] })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ message: 'Note deleted.' }) });
+
+    renderDashboard();
+
+    await waitFor(() => {
+      expect(screen.getByText('North London Derby')).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByTitle('Delete'));
+    await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText('North London Derby')).not.toBeInTheDocument();
+    });
   });
 });
