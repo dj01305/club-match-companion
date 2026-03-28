@@ -160,16 +160,16 @@ cd frontend
 npm test
 ```
 
-### Automated API tests
+### Automated API tests (Playwright)
 ```bash
 cd backend
-# coming soon
+npm run test:api
 ```
 
 ### E2E tests (Playwright)
 ```bash
 cd frontend
-npx playwright test
+npm run test:e2e
 ```
 
 All tests use async/await and explicit waits
