@@ -31,6 +31,17 @@ describe('POST /auth/register', () => {
     expect(res.body.error).toMatch(/required/i);
   });
 
+  test('returns 400 when email format is invalid', async () => {
+    const res = await request(app).post('/auth/register').send({
+      name: 'Test User',
+      email: 'not-an-email',
+      password: 'password123',
+      favoriteClub: 'Arsenal',
+    });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/invalid email format/i);
+  });
+
   test('returns 409 when email is already registered', async () => {
     const user = {
       name: 'Duplicate',
