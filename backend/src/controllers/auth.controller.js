@@ -11,6 +11,11 @@ async function register(req, res) {
     return res.status(400).json({ error: 'All fields are required.' });
   }
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: 'Invalid email format.' });
+  }
+
   const existing = db.get('SELECT id FROM users WHERE email = ?', [email]);
   if (existing) {
     return res.status(409).json({ error: 'Email already registered.' });
