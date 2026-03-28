@@ -10,10 +10,19 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({ email: '', password: '' });
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError('');
+
+    const errors = {
+      email: email.trim() ? '' : 'Email is required.',
+      password: password.trim() ? '' : 'Password is required.',
+    };
+    setFieldErrors(errors);
+    if (Object.values(errors).some(Boolean)) return;
+
     try {
       const res = await fetch('/auth/login', {
         method: 'POST',
@@ -50,17 +59,18 @@ export default function Login() {
         )}
         {error && <div className="alert alert-error" role="alert">{error}</div>}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
               id="email"
               type="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={e => { setEmail(e.target.value); if (fieldErrors.email) setFieldErrors(prev => ({ ...prev, email: '' })); }}
               placeholder="you@example.com"
-              required
+              aria-describedby={fieldErrors.email ? 'email-error' : undefined}
             />
+            {fieldErrors.email && <p className="field-error" id="email-error" role="alert">{fieldErrors.email}</p>}
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
@@ -68,10 +78,11 @@ export default function Login() {
               id="password"
               type="password"
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={e => { setPassword(e.target.value); if (fieldErrors.password) setFieldErrors(prev => ({ ...prev, password: '' })); }}
               placeholder="••••••••"
-              required
+              aria-describedby={fieldErrors.password ? 'password-error' : undefined}
             />
+            {fieldErrors.password && <p className="field-error" id="password-error" role="alert">{fieldErrors.password}</p>}
           </div>
           <button type="submit" className="btn btn-primary">Sign in</button>
         </form>

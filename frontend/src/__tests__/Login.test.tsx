@@ -114,6 +114,29 @@ describe('Login page', () => {
     });
   });
 
+  test('shows a field error when email is empty and form is submitted', async () => {
+    renderLogin();
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
+    expect(screen.getByText('Email is required.')).toBeInTheDocument();
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  test('shows a field error when password is empty and form is submitted', async () => {
+    renderLogin();
+    await userEvent.type(screen.getByLabelText('Email'), 'user@example.com');
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
+    expect(screen.getByText('Password is required.')).toBeInTheDocument();
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  test('clears the field error when the user starts typing', async () => {
+    renderLogin();
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
+    expect(screen.getByText('Email is required.')).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText('Email'), 'a');
+    expect(screen.queryByText('Email is required.')).not.toBeInTheDocument();
+  });
+
   test('shows a success banner when arriving from registration', () => {
     renderLoginAfterRegister();
     expect(screen.getByRole('status')).toHaveTextContent('Account created successfully. Please sign in.');
