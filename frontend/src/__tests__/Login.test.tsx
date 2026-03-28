@@ -23,6 +23,19 @@ function renderLogin(loginFn = vi.fn()) {
   );
 }
 
+// Helper: renders Login as if redirected from a successful registration
+function renderLoginAfterRegister() {
+  return render(
+    <AuthContext.Provider value={{ token: null, user: null, login: vi.fn(), logout: vi.fn() }}>
+      <MemoryRouter initialEntries={[{ pathname: '/login', state: { registered: true } }]}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </MemoryRouter>
+    </AuthContext.Provider>
+  );
+}
+
 beforeEach(() => {
   mockFetch.mockReset();
 });
@@ -99,5 +112,10 @@ describe('Login page', () => {
     await waitFor(() => {
       expect(screen.queryByText('Dashboard')).not.toBeInTheDocument();
     });
+  });
+
+  test('shows a success banner when arriving from registration', () => {
+    renderLoginAfterRegister();
+    expect(screen.getByRole('status')).toHaveTextContent('Account created successfully. Please sign in.');
   });
 });
