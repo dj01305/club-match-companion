@@ -1,0 +1,123 @@
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import Register from '../pages/Register';
+
+// We mock ClubAutocomplete so Register tests don't depend on club search logic
+vi.mock('../components/ClubAutocomplete', () => ({
+  default: ({ id, name, value, onChange, placeholder, required }: {
+    id: string; name: string; value: string; onChange: (v: string) => void;
+    placeholder?: string; required?: boolean;
+  }) => (
+    <input
+      id={id}
+      name={name}
+      value={value}
+      placeholder={placeholder}
+      required={required}
+      onChange={e => onChange(e.target.value)}
+    />
+  ),
+}));
+
+const mockFetch = vi.fn();
+vi.stubGlobal('fetch', mockFetch);
+
+function renderRegister() {
+  return render(
+    <MemoryRouter initialEntries={['/register']}>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<div>Login page</div>} />
+      </Routes>
+    </MemoryRouter>
+  );
+}
+
+beforeEach(() => {
+  mockFetch.mockReset();
+});
+
+describe('Register page', () => {
+  test('renders all four fields', () => {
+    renderRegister();
+    expect(screen.getByLabelText('Full name')).toBeInTheDocument();
+    expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+    expect(screen.getByLabelText('Favourite club')).toBeInTheDocument();
+  });
+
+  test('navigates to /login after successful registration', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({ message: 'Registration successful.', userId: 1 }),
+    });
+
+    renderRegister();
+
+    await userEvent.type(screen.getByLabelText('Full name'), 'Jane Smith');
+    await userEvent.type(screen.getByLabelText('Email'), 'jane@example.com');
+    await userEvent.type(screen.getByLabelText('Password'), 'Password123!');
+    await userEvent.type(screen.getByLabelText('Favourite club'), 'Arsenal');
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Login page')).toBeInTheDocument();
+    });
+  });
+
+  test('shows an error when the API rejects (e.g. duplicate email)', async () => {
+    mockFetch.mockResolvedValue({
+      ok: false,
+      json: async () => ({ error: 'Email already registered.' }),
+    });
+
+    renderRegister();
+
+    await userEvent.type(screen.getByLabelText('Full name'), 'Jane Smith');
+    await userEvent.type(screen.getByLabelText('Email'), 'existing@example.com');
+    await userEvent.type(screen.getByLabelText('Password'), 'Password123!');
+    await userEvent.type(screen.getByLabelText('Favourite club'), 'Arsenal');
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent('Email already registered.');
+    });
+  });
+
+  test('shows a network error message when fetch throws', async () => {
+    mockFetch.mockRejectedValue(new Error('Network failure'));
+
+    renderRegister();
+
+    await userEvent.type(screen.getByLabelText('Full name'), 'Jane Smith');
+    await userEvent.type(screen.getByLabelText('Email'), 'jane@example.com');
+    await userEvent.type(screen.getByLabelText('Password'), 'Password123!');
+    await userEvent.type(screen.getByLabelText('Favourite club'), 'Arsenal');
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent('Network error. Please try again.');
+    });
+  });
+
+  test('does not navigate away when registration fails', async () => {
+    mockFetch.mockResolvedValue({
+      ok: false,
+      json: async () => ({ error: 'Email already registered.' }),
+    });
+
+    renderRegister();
+
+    await userEvent.type(screen.getByLabelText('Full name'), 'Jane Smith');
+    await userEvent.type(screen.getByLabelText('Email'), 'existing@example.com');
+    await userEvent.type(screen.getByLabelText('Password'), 'Password123!');
+    await userEvent.type(screen.getByLabelText('Favourite club'), 'Arsenal');
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText('Login page')).not.toBeInTheDocument();
+    });
+  });
+});
