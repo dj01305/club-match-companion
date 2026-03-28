@@ -35,5 +35,8 @@ export default defineConfig({
   // Runs once before all tests — registers the shared test user and saves the token
   globalSetup: './tests/global-setup.ts',
 
+  // Runs once after all tests — deletes the test user account and cleans up the token file
+  globalTeardown: './tests/global-teardown.ts',
+
   reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }], ['list']],
 });
