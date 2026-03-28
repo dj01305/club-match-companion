@@ -20,14 +20,31 @@ export default function Register() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', password: '', favoriteClub: '' });
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({ name: '', email: '', password: '', favoriteClub: '' });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+    // Clear the error for this field as the user types
+    if (fieldErrors[name as keyof typeof fieldErrors]) {
+      setFieldErrors(prev => ({ ...prev, [name]: '' }));
+    }
   }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError('');
+
+    // Validate all fields before submitting
+    const errors = {
+      name: form.name.trim() ? '' : 'Full name is required.',
+      email: form.email.trim() ? '' : 'Email is required.',
+      password: form.password.trim() ? '' : 'Password is required.',
+      favoriteClub: form.favoriteClub.trim() ? '' : 'Favourite club is required.',
+    };
+    setFieldErrors(errors);
+    if (Object.values(errors).some(Boolean)) return;
+
     try {
       const res = await fetch('/auth/register', {
         method: 'POST',
@@ -56,7 +73,7 @@ export default function Register() {
 
         {error && <div className="alert alert-error" role="alert">{error}</div>}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           {(['name', 'email', 'password'] as const).map(field => (
             <div className="form-group" key={field}>
               <label htmlFor={field}>{FIELD_LABELS[field]}<span className="required-indicator" aria-hidden="true">*</span></label>
@@ -67,8 +84,9 @@ export default function Register() {
                 value={form[field]}
                 onChange={handleChange}
                 placeholder={FIELD_PLACEHOLDERS[field]}
-                required
+                aria-describedby={fieldErrors[field] ? `${field}-error` : undefined}
               />
+              {fieldErrors[field] && <p className="field-error" id={`${field}-error`} role="alert">{fieldErrors[field]}</p>}
             </div>
           ))}
           <div className="form-group">
@@ -78,9 +96,12 @@ export default function Register() {
               name="favoriteClub"
               value={form.favoriteClub}
               placeholder={FIELD_PLACEHOLDERS.favoriteClub}
-              required
-              onChange={val => setForm(prev => ({ ...prev, favoriteClub: val }))}
+              onChange={val => {
+                setForm(prev => ({ ...prev, favoriteClub: val }));
+                if (fieldErrors.favoriteClub) setFieldErrors(prev => ({ ...prev, favoriteClub: '' }));
+              }}
             />
+            {fieldErrors.favoriteClub && <p className="field-error" id="favoriteClub-error" role="alert">{fieldErrors.favoriteClub}</p>}
           </div>
           <button type="submit" className="btn btn-primary">Create account</button>
         </form>
