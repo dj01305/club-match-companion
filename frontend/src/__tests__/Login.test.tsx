@@ -129,6 +129,15 @@ describe('Login page', () => {
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
+  test('shows a field error when email format is invalid', async () => {
+    renderLogin();
+    await userEvent.type(screen.getByLabelText('Email'), 'notanemail');
+    await userEvent.type(screen.getByLabelText('Password'), 'Password123!');
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
+    expect(screen.getByText('Please enter a valid email address.')).toBeInTheDocument();
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
   test('clears the field error when the user starts typing', async () => {
     renderLogin();
     await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));

@@ -142,6 +142,17 @@ describe('Register page — inline validation', () => {
     expect(screen.queryByText('Full name is required.')).not.toBeInTheDocument();
   });
 
+  test('shows a field error when email format is invalid', async () => {
+    renderRegister();
+    await userEvent.type(screen.getByLabelText('Full name', { exact: false }), 'Jane Smith');
+    await userEvent.type(screen.getByLabelText('Email', { exact: false }), 'notanemail');
+    await userEvent.type(screen.getByLabelText('Password', { exact: false }), 'Password123!');
+    await userEvent.type(screen.getByLabelText('Favourite club', { exact: false }), 'Arsenal');
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
+    expect(screen.getByText('Please enter a valid email address.')).toBeInTheDocument();
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
   test('does not call fetch when fields are empty', async () => {
     renderRegister();
     await userEvent.click(screen.getByRole('button', { name: 'Create account' }));

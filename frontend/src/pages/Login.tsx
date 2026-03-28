@@ -16,8 +16,9 @@ export default function Login() {
     e.preventDefault();
     setError('');
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const errors = {
-      email: email.trim() ? '' : 'Email is required.',
+      email: !email.trim() ? 'Email is required.' : !emailRegex.test(email) ? 'Please enter a valid email address.' : '',
       password: password.trim() ? '' : 'Password is required.',
     };
     setFieldErrors(errors);
