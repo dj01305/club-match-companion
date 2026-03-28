@@ -1,15 +1,15 @@
 /**
  * LoginPage.js
  *
- * Page object for /login.
- * Contains locators and actions for the login page.
+ * Page object for /login (the sign-in page).
+ * Contains locators and actions for the login form.
  */
 
 export class LoginPage {
   constructor(page) {
     this.page = page;
 
-    // Locators — using labels and roles, not CSS classes
+    // Locators
     this.emailInput = page.getByLabel('Email');
     this.passwordInput = page.getByLabel('Password');
     this.signInButton = page.getByRole('button', { name: 'Sign in' });
@@ -23,7 +23,7 @@ export class LoginPage {
   }
 
   // Fill in credentials and submit the form
-  async login(email, password) {
+  async login({ email, password }) {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
     await this.signInButton.click();

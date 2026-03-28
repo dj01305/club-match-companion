@@ -29,7 +29,13 @@ export class RegisterPage {
     await this.nameInput.fill(name);
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
+
+    // Typing into the club field opens an autocomplete dropdown.
+    // We click the first suggestion to select it and close the dropdown
+    // before attempting to click the submit button.
     await this.favouriteClubInput.fill(favoriteClub);
+    await this.page.locator('.autocomplete-item').first().click();
+
     await this.createAccountButton.click();
   }
 }
