@@ -121,3 +121,30 @@ describe('Register page', () => {
     });
   });
 });
+
+describe('Register page — inline validation', () => {
+  test('shows field errors when submitting an empty form', async () => {
+    renderRegister();
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
+
+    expect(await screen.findByText('Full name is required.')).toBeInTheDocument();
+    expect(screen.getByText('Email is required.')).toBeInTheDocument();
+    expect(screen.getByText('Password is required.')).toBeInTheDocument();
+    expect(screen.getByText('Favourite club is required.')).toBeInTheDocument();
+  });
+
+  test('clears a field error when the user starts typing', async () => {
+    renderRegister();
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
+    expect(await screen.findByText('Full name is required.')).toBeInTheDocument();
+
+    await userEvent.type(screen.getByLabelText('Full name', { exact: false }), 'Jane');
+    expect(screen.queryByText('Full name is required.')).not.toBeInTheDocument();
+  });
+
+  test('does not call fetch when fields are empty', async () => {
+    renderRegister();
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+});

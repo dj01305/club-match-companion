@@ -114,6 +114,12 @@ h1, h2, h3 { line-height: 1.25; font-weight: 700; }
   margin-left: 2px;
 }
 
+.field-error {
+  color: #fca5a5;
+  font-size: 0.78rem;
+  margin-top: 5px;
+}
+
 .form-group input,
 .form-group textarea {
   width: 100%;
