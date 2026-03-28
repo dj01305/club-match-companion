@@ -35,10 +35,10 @@ export default function Register() {
     e.preventDefault();
     setError('');
 
-    // Validate all fields before submitting
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const errors = {
       name: form.name.trim() ? '' : 'Full name is required.',
-      email: form.email.trim() ? '' : 'Email is required.',
+      email: !form.email.trim() ? 'Email is required.' : !emailRegex.test(form.email) ? 'Please enter a valid email address.' : '',
       password: form.password.trim() ? '' : 'Password is required.',
       favoriteClub: form.favoriteClub.trim() ? '' : 'Favourite club is required.',
     };

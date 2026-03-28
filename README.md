@@ -125,6 +125,17 @@ PORT=3000
 JWT_SECRET=your_super_secret_key_change_this_in_production
 ```
 
+## Security considerations
+
+**JWT storage in localStorage**
+This app stores JWT tokens in `localStorage`, which is the standard approach for single-page applications. The tradeoff is that localStorage is accessible to JavaScript, meaning a successful XSS (cross-site scripting) attack on the page could read the token. For a portfolio project this is an acceptable choice. In a production app handling sensitive data, the more secure alternative is storing the token in an `httpOnly` cookie, which JavaScript cannot read at all.
+
+**Auth rate limiting**
+The `/auth/register` and `/auth/login` endpoints are rate-limited to 10 requests per 15 minutes per IP address. This prevents brute-force and credential-stuffing attacks. The limit is bypassed automatically during test runs.
+
+**Password hashing**
+Passwords are hashed with bcrypt (10 salt rounds) before storage. Plain-text passwords are never saved to the database.
+
 ## Quality gate
 
 A coverage threshold is enforced automatically on every `git push` via a pre-push hook. The push will be rejected if any of the following drop below **80%**:
