@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNotes, Note, NotePayload } from '../hooks/useNotes';
 import NoteCard from '../components/NoteCard';
 import NoteForm from '../components/NoteForm';
+import ConfirmModal from '../components/ConfirmModal';
 import { getClubTheme } from '../utils/clubThemes';
 
 export default function Dashboard() {
@@ -10,6 +11,7 @@ export default function Dashboard() {
   const { notes, loading, error, createNote, updateNote, deleteNote } = useNotes();
   const [showForm, setShowForm] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | undefined>(undefined);
+  const [noteToDelete, setNoteToDelete] = useState<number | null>(null);
 
   // Apply team accent color as CSS variables only — no background tinting
   useEffect(() => {
@@ -43,8 +45,13 @@ export default function Dashboard() {
   }
 
   async function handleDelete(id: number) {
-    if (confirm('Delete this note?')) {
-      await deleteNote(id);
+    setNoteToDelete(id);
+  }
+
+  async function confirmDelete() {
+    if (noteToDelete !== null) {
+      await deleteNote(noteToDelete);
+      setNoteToDelete(null);
     }
   }
 
@@ -117,6 +124,14 @@ export default function Dashboard() {
           </div>
         )}
       </main>
+
+      {noteToDelete !== null && (
+        <ConfirmModal
+          message="Delete this note?"
+          onConfirm={confirmDelete}
+          onCancel={() => setNoteToDelete(null)}
+        />
+      )}
     </div>
   );
 }

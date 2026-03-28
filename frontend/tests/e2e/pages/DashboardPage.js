@@ -57,13 +57,17 @@ export class DashboardPage {
       .click();
   }
 
-  // Click the delete button on a note card by its title
+  // Click the delete button on a note card by its title,
+  // then confirm using the in-app modal.
   async deleteNote(noteTitle) {
     await this.page
       .getByText(noteTitle)
       .locator('..')
       .getByTitle('Delete')
       .click();
+
+    // Click the confirm button in the in-app modal
+    await this.page.getByRole('button', { name: 'Delete' }).click();
   }
 
   // Returns a locator for a note card by its title — useful for assertions
