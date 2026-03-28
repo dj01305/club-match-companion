@@ -10,8 +10,8 @@
  * login form for every test.
  */
 
-import { test, expect } from './fixtures.js';
-import { DashboardPage } from './pages/DashboardPage.js';
+import { test, expect } from '../fixtures.js';
+import { DashboardPage } from '../pages/DashboardPage.js';
 
 const TEST_NOTE = {
   noteTitle: 'E2E Test Note',

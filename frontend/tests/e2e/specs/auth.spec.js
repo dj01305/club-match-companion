@@ -11,9 +11,9 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { RegisterPage } from './pages/RegisterPage.js';
-import { LoginPage } from './pages/LoginPage.js';
-import { generateTestUser } from './utils/testData.js';
+import { RegisterPage } from '../pages/RegisterPage.js';
+import { LoginPage } from '../pages/LoginPage.js';
+import { generateTestUser } from '../utils/testData.js';
 
 test.describe('Registration', () => {
   test('a new user can register and is redirected to the login screen', async ({ page }) => {
