@@ -39,7 +39,7 @@ export default function Register() {
         setError(data.error || 'Registration failed.');
         return;
       }
-      navigate('/login');
+      navigate('/login', { state: { registered: true } });
     } catch {
       setError('Network error. Please try again.');
     }

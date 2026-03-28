@@ -7,3 +7,7 @@ dist/
 frontend/.vite/
 frontend/coverage/
 backend/coverage/
+frontend/playwright-report/
+backend/playwright-report/
+frontend/test-results/
+backend/test-results/

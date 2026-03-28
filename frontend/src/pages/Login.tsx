@@ -1,10 +1,12 @@
 import { useState, FormEvent } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const justRegistered = location.state?.registered === true;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -41,6 +43,11 @@ export default function Login() {
 
         <h2>Sign in</h2>
 
+        {justRegistered && (
+          <div className="alert alert-success" role="status">
+            Account created successfully. Please sign in.
+          </div>
+        )}
         {error && <div className="alert alert-error" role="alert">{error}</div>}
 
         <form onSubmit={handleSubmit}>
