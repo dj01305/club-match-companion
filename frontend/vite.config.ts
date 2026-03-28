@@ -14,5 +14,6 @@ export default defineConfig({
     environment: 'jsdom',           // fake browser environment
     globals: true,                  // no need to import describe/test/expect
     setupFiles: './src/test.setup.ts',
+    include: ['src/__tests__/**/*.test.{ts,tsx}'],  // only run unit/component tests, not e2e specs
   },
 });
