@@ -288,8 +288,8 @@ export function searchClubs(query: string, limit = 6): string[] {
   const results: string[] = [];
   for (const club of clubs) {
     if (
-      club.theme.name.toLowerCase().includes(q) ||
-      club.aliases.some(a => a.includes(q))
+      club.theme.name.toLowerCase().startsWith(q) ||
+      club.aliases.some(a => a.toLowerCase().startsWith(q))
     ) {
       results.push(club.theme.name);
       if (results.length >= limit) break;
