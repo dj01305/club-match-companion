@@ -1,5 +1,6 @@
 node_modules/
 .env
+.env.e2e
 backend/data/
 dist/
 .DS_Store
