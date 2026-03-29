@@ -114,6 +114,7 @@ The app will open on http://localhost:5173
 | POST | /api/notes | Yes | Create a note |
 | PUT | /api/notes/:id | Yes | Update a note |
 | DELETE | /api/notes/:id | Yes | Delete a note |
+| DELETE | /auth/user | Yes | Delete your account |
 | GET | /health | No | API health check |
 
 ## Environment variables
