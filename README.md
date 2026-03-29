@@ -33,7 +33,7 @@ A full-stack web app for football fans to log and manage personal match notes. B
 ### Testing
 - Playwright — end-to-end UI tests
 - Jest — backend unit test runner
-- Supertest — HTTP request helper for backend tests
+- Supertest — used within Jest tests to make HTTP requests against the Express app
 - Vitest — frontend unit test runner
 - React Testing Library — renders components for unit testing
 
