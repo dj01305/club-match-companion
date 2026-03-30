@@ -1,6 +1,8 @@
 # Club Match Companion
 
-A full-stack web app for football fans to log and manage personal match notes. Built as a portfolio project to demonstrate growth from QA automation engineer into an SDET — with shift-left principles applied throughout: testing is a first-class concern, not an afterthought. This app is also a benchmark for AI-assisted development, using Kiro AI to accelerate boilerplate generation while applying senior-level oversight to architectural patterns and test robustness.
+A full-stack web app for football fans to log and manage personal match notes. Built as a portfolio project to demonstrate growth from QA automation engineer into an SDET — with shift-left principles applied throughout: testing is a first-class concern, not an afterthought.
+
+This project was built in deliberate partnership with AI (Kiro). I designed the architecture, defined every feature, and owned all quality engineering decisions. The test strategy, CI pipeline, coverage gates, and security tradeoffs are mine. AI accelerated the implementation, letting me ship a production-quality full-stack app while staying focused on what I do best: architecture, test strategy, and quality engineering. I think knowing how to direct and validate AI output is itself a skill worth demonstrating, and one the industry increasingly expects.
 
 ## What it does
 
@@ -9,12 +11,35 @@ A full-stack web app for football fans to log and manage personal match notes. B
 - Dashboard themed around your favourite club
 - Protected routes — only logged-in users can access their notes
 
-## Key Quality Features
+## Quality engineering approach
 
-- ✅ JWT-secured API with automated auth flow testing
-- ✅ Zero-flakiness Playwright config
-- ✅ Type safety across the stack with TypeScript
-- ✅ CI/CD ready with headless test execution
+Quality is built in at every layer, not bolted on at the end. This project applies a layered test strategy:
+
+| Layer | Tool | What it covers |
+|-------|------|----------------|
+| Backend unit | Jest | JWT middleware in isolation, DB helper functions |
+| Backend integration | Jest + Supertest | Full request/response cycle through Express routes, middleware, and DB |
+| Frontend unit/component | Vitest + React Testing Library | Component rendering, auth context, form behaviour, custom hooks |
+| API | Playwright (API mode) | Live server contract testing — auth flows, notes CRUD, access control, data isolation |
+| E2E | Playwright (browser) | Critical user journeys: register, login, create/edit/delete notes |
+
+Each layer has a distinct purpose. Unit tests give fast, isolated feedback on individual functions. Integration tests verify that routes, middleware, and the database work correctly together. API tests hit a live server and validate the full HTTP contract. E2E tests confirm the entire stack works from a real user's perspective in a browser.
+
+### CI/CD pipeline
+
+Every pull request targeting `main` triggers a GitHub Actions pipeline. All checks must pass before a PR can be merged — there is no manual override.
+
+The pipeline runs four jobs in dependency order:
+
+```
+backend-unit ──► backend-api
+frontend-unit ──► frontend-e2e (needs both unit jobs to pass first)
+```
+
+- Backend unit tests run first. If they fail, API tests are skipped.
+- Frontend unit tests run in parallel with the backend jobs.
+- E2E tests only run once both unit test jobs are green.
+- Playwright reports are uploaded as artifacts on failure for debugging.
 
 ## Tech stack
 
