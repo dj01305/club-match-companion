@@ -27,7 +27,7 @@ Each layer has a distinct purpose. Unit tests give fast, isolated feedback on in
 
 ### CI/CD pipeline
 
-Every pull request targeting `main` triggers a GitHub Actions pipeline. All checks must pass before a PR can be merged — there is no manual override.
+Every pull request targeting `main` triggers a GitHub Actions pipeline. All checks must pass before a PR can be merged.  There is no manual override.
 
 The pipeline runs four jobs in dependency order:
 
@@ -213,7 +213,7 @@ All tests use async/await and explicit waits
 
 ## Career context
 
-I have been writing test automation since 2014. My earlier work — [like the Hudl Login Test Suite](https://github.com/dj01305/Devin-James-Hudl-Repo) — was focused on Java + Selenium WebDriver automation. That repo reflects where I started, and I've written openly about what I'd do differently today.
+I have been writing test automation since 2014. My earlier work like the [Hudl Login Test Suite](https://github.com/dj01305/Devin-James-Hudl-Repo) was focused on Java + Selenium WebDriver automation. That repo reflects where I started, and I've written openly about what I'd do differently today.
 
 Club Match Companion represents where I am now: building full-stack applications with quality baked in from the start, with API and E2E tests written alongside the features they cover. Tests are portable, CI-ready, and written with the same async patterns as the application code itself.
 
