@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import ClubAutocomplete from '../components/ClubAutocomplete';
+import { validateClubName } from '../utils/clubSchema';
 
 const FIELD_LABELS: Record<string, string> = {
   name: 'Full name',
@@ -40,7 +41,7 @@ export default function Register() {
       name: form.name.trim() ? '' : 'Full name is required.',
       email: !form.email.trim() ? 'Email is required.' : !emailRegex.test(form.email) ? 'Please enter a valid email address.' : '',
       password: form.password.trim() ? '' : 'Password is required.',
-      favoriteClub: form.favoriteClub.trim() ? '' : 'Favourite club is required.',
+      favoriteClub: validateClubName(form.favoriteClub) ?? '',
     };
     setFieldErrors(errors);
     if (Object.values(errors).some(Boolean)) return;

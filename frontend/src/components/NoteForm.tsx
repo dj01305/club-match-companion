@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Note, NotePayload } from '../hooks/useNotes';
 import ClubAutocomplete from './ClubAutocomplete';
+import { validateClubName } from '../utils/clubSchema';
 
 interface Props {
   initial?: Note;
@@ -43,8 +44,8 @@ export default function NoteForm({ initial, onSubmit, onCancel }: Props) {
     e.preventDefault();
     const errors = {
       noteTitle: form.noteTitle.trim() ? '' : 'Note title is required.',
-      club: form.club.trim() ? '' : 'Your club is required.',
-      opponent: form.opponent.trim() ? '' : 'Opponent is required.',
+      club: validateClubName(form.club) ?? '',
+      opponent: validateClubName(form.opponent) ?? '',
       matchDate: form.matchDate.trim() ? '' : 'Match date is required.',
     };
     setFieldErrors(errors);
