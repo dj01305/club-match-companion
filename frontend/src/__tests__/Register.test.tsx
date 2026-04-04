@@ -130,7 +130,7 @@ describe('Register page — inline validation', () => {
     expect(await screen.findByText('Full name is required.')).toBeInTheDocument();
     expect(screen.getByText('Email is required.')).toBeInTheDocument();
     expect(screen.getByText('Password is required.')).toBeInTheDocument();
-    expect(screen.getByText('Favourite club is required.')).toBeInTheDocument();
+    expect(screen.getByText('Club name is required.')).toBeInTheDocument();
   });
 
   test('clears a field error when the user starts typing', async () => {

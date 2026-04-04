@@ -37,8 +37,7 @@ describe('NoteForm — inline validation', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Save note' }));
 
     expect(await screen.findByText('Note title is required.')).toBeInTheDocument();
-    expect(screen.getByText('Your club is required.')).toBeInTheDocument();
-    expect(screen.getByText('Opponent is required.')).toBeInTheDocument();
+    expect(screen.getAllByText('Club name is required.')).toHaveLength(2);
     expect(screen.getByText('Match date is required.')).toBeInTheDocument();
   });
 
